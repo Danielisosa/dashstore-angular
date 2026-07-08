@@ -1,20 +1,58 @@
-<h1 class="text-3xl font-bold font-montserrat ds-title-gradient">Todos los productos</h1><br>
-<h2 class="text-xl mb-5 ds-title-gradient">Para todos los gustos</h2>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fadeIn">
 
+  <!-- 🏷️ ENCABEZADO: Título y Eslogan Estilizados -->
+  <header class="relative mb-10 p-6 md:p-8 rounded-2xl bg-gradient-to-r from-slate-900/40 via-slate-900/10 to-transparent border border-slate-900/60 overflow-hidden flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <!-- Efecto destello de fondo -->
+    <div class="absolute -top-12 -left-12 w-48 h-48 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
 
+    <div class="space-y-1">
+      <span class="text-xs font-bold uppercase tracking-widest text-accent">Explora la Tienda</span>
+      <h1 class="text-3xl md:text-4xl font-black font-montserrat tracking-tight text-white m-0">
+        Todos los Productos
+      </h1>
+      <p class="text-sm md:text-base text-slate-400 font-medium">
+        Diseños exclusivos pensados para todos los gustos y estilos.
+      </p>
+    </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-3">
- @for (product of productsResource.value()?.products; track $index) {
+    <!-- Métrica o Contador Rápido Visual (Opcional pero suma puntos en UX) -->
+    <div class="text-xs text-slate-500 font-semibold bg-slate-950/60 border border-slate-900 px-3 py-1.5 rounded-lg w-fit h-fit backdrop-blur-sm">
+      Mostrando: <span class="text-slate-300 font-mono font-bold">{{ productsResource.value()?.products?.length ?? 0 }}</span> artículos
+    </div>
+  </header>
 
-   <product-card [product]="product"/>
+  <!-- 🛍️ GRID DE PRODUCTOS: Cuadrícula Adaptativa Optimizada -->
+  <main class="mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+      @for (product of productsResource.value()?.products; track product.id) {
 
- }
- @empty{
-  <p>No hay productos</p>
- }
+        <div class="hover:-translate-y-1 transition-transform duration-300 ease-out">
+          <product-card [product]="product"/>
+        </div>
+
+      }
+      @empty {
+        <!-- 🏝️ EMPTY STATE: Pantalla limpia si no hay stock disponible -->
+        <div class="col-span-full flex flex-col items-center justify-center text-center py-16 px-4 rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 backdrop-blur-sm">
+          <div class="p-4 bg-slate-950 rounded-full border border-slate-900 text-slate-500 mb-4 shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 animate-bounce">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 0 1 2.008 1.24l.885 1.77a2.25 2.25 0 0 0 2.007 1.24h1.98a2.25 2.25 0 0 0 2.007-1.24l.885-1.77a2.25 2.25 0 0 1 2.007-1.24h3.86m-18 0h18a2.25 2.25 0 0 1 2.25 2.25v4.25A2.25 2.25 0 0 1 18 22H6a2.25 2.25 0 0 1-2.25-2.25V15.75a2.25 2.25 0 0 1 2.25-2.25Zm0-10.5h18A2.25 2.25 0 0 1 22 7.5v2.25a2.25 2.25 0 0 1-2.25 2.25H2.25A2.25 2.25 0 0 1 0 9.75V7.5A2.25 2.25 0 0 1 2.25 5.25Zm0 0V3.75A2.25 2.25 0 0 1 4.5 1.5h15A2.25 2.25 0 0 1 21 3.75V5.25" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-200">Catálogo en mantenimiento</h3>
+          <p class="text-sm text-slate-500 max-w-xs mt-1">
+            No pudimos encontrar productos en esta categoría. Por favor, regresa más tarde.
+          </p>
+        </div>
+      }
+    </div>
+  </main>
+
+  <!-- 🧭 PAGINACIÓN: Separada y Acomodada -->
+  <footer class="flex justify-center border-t border-slate-900/60 pt-8">
+    <app-pagination
+      [pages]="productsResource.value()?.pages ?? 0"
+      [currentPage]="paginationService.currentPage()"/>
+  </footer>
 
 </div>
-
-<app-pagination [pages]="productsResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()"/>
-
-

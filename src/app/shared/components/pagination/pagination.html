@@ -1,4 +1,25 @@
-<div class="join flex justify-center items-center">
+<div class="flex justify-center items-center my-2 animate-fadeIn">
+  <div class="join bg-slate-950/80 border border-slate-800/80 p-1 rounded-xl shadow-lg backdrop-blur-md">
+
+    @for(page of getPagesList(); track page){
+      <button
+        class="join-item btn btn-sm font-mono transition-all duration-200 rounded-lg min-w-[36px]"
+        [class]="page === activePage()
+          ? 'bg-accent text-slate-950 font-black border-none shadow-[0_0_15px_rgba(0,242,254,0.3)]'
+          : 'btn-ghost text-slate-400 hover:text-white hover:bg-slate-900/60'"
+        [routerLink]="[]"
+        [queryParams]="{page: page}"
+        (click)="activePage.set(page)">
+        {{ page }}
+      </button>
+    }
+    @empty {
+      <span class="text-xs text-slate-600 px-4 py-1">Sin páginas</span>
+    }
+
+  </div>
+</div>
+<!-- <div class="join flex justify-center items-center">
   @for(page of getPagesList(); track page){
     <button class="join-item btn" [class.btn-primary]="page === activePage()" [routerLink]="[]"
     [queryParams]="{page: page}"
@@ -7,4 +28,4 @@
     </button>
   }
   @empty {}
-</div>
+</div> -->

@@ -1,4 +1,69 @@
-<h1 class="text-2xl font-bold ds-title-gradient">Listado de Productos</h1>
+<!-- Encabezado del Listado con Métrica Estilizada -->
+<header class="relative mb-6 p-6 rounded-2xl bg-gradient-to-r from-slate-900/50 via-slate-900/20 to-transparent border border-slate-800/40 overflow-hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+  <!-- Destello de fondo sutil -->
+  <div class="absolute -top-10 -left-10 w-40 h-40 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div>
+    <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Panel de Control</span>
+    <h1 class="text-2xl md:text-3xl font-black font-montserrat text-white tracking-tight mt-0.5">
+      Listado de Productos
+    </h1>
+  </div>
+
+  <!-- Badge de Total de Productos Premium -->
+  <div class="flex items-center gap-3 bg-slate-950/60 border border-slate-800 px-4 py-2 rounded-xl w-fit backdrop-blur-sm shadow-sm">
+    <span class="text-sm font-medium text-slate-400">Total productos:</span>
+    <span class="text-lg font-black text-accent drop-shadow-[0_0_10px_rgba(0,242,254,0.3)]">
+      {{ productsResource.value()?.count ?? 0 }}
+    </span>
+  </div>
+</header>
+
+<!-- Barra de Herramientas y Acciones (Filtro por página y Botón Nuevo) -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 mb-6 rounded-xl bg-slate-900/30 border border-slate-800/50 backdrop-blur-sm">
+
+  <!-- Control de registros por página -->
+  <div class="flex items-center gap-3">
+    <label for="per-page-select" class="text-sm font-medium text-slate-400">Registros por página:</label>
+    <div class="relative">
+      <select
+        id="per-page-select"
+        class="select select-sm bg-slate-950 border border-slate-800 text-slate-300 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent w-24 pr-8 font-semibold transition-all"
+        aria-label="Registros por página"
+        (change)="productPerPage.set(+selectPerPage.value)"
+        #selectPerPage>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Botón de Acción Principal (Crear Nuevo) -->
+  <button
+    class="btn btn-sm bg-accent hover:bg-accent/90 text-slate-950 font-bold border-none rounded-xl px-4 flex items-center gap-2 transition-all duration-200 shadow-[0_0_15px_rgba(0,242,254,0.15)] hover:shadow-[0_0_25px_rgba(0,242,254,0.35)] hover:-translate-y-0.5"
+    routerLink="/admin/products/new">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+    Nuevo Producto
+  </button>
+</div>
+
+<!-- Contenedor con overflow controlado para envolver la tabla y que no rompa el layout -->
+<div class="rounded-2xl border border-slate-800/60 bg-slate-900/20 overflow-hidden shadow-xl backdrop-blur-sm">
+  <product-table [products]="productsResource.value()?.products ?? []"/>
+</div>
+
+<!-- Paginación Acomodada -->
+<div class="flex justify-end mt-6 pt-4 border-t border-slate-900">
+  <app-pagination
+    [pages]="productsResource.value()?.pages ?? 0"
+    [currentPage]="paginationService.currentPage()"
+  />
+</div>
+<!-- <h1 class="text-2xl font-bold ds-title-gradient">Listado de Productos</h1>
 <h3 class="text-lg">Total de Productos
   <span class="text-accent">{{ productsResource.value()?.count }}</span>
 </h3>
@@ -26,4 +91,4 @@
   [pages]="productsResource.value()?.pages ?? 0"
   [currentPage]="paginationService.currentPage()"
   />
-</div>
+</div> -->

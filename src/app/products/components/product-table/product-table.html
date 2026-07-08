@@ -1,14 +1,106 @@
-<div class="card product-table">
+<div class="w-full bg-slate-900/20 backdrop-blur-sm">
+  <div class="overflow-x-auto">
+    <table class="table w-full border-collapse">
+
+      <thead>
+        <tr class="border-b border-slate-800/80 text-slate-400 text-xs uppercase tracking-wider bg-slate-950/40">
+          <th class="py-4 px-6 w-12">
+            <label>
+              <input type="checkbox" class="checkbox checkbox-sm checkbox-accent rounded border-slate-700 bg-slate-950 focus:ring-accent" />
+            </label>
+          </th>
+          <th class="py-4 px-4 font-bold font-montserrat">Producto</th>
+          <th class="py-4 px-4 font-bold font-montserrat">Precio</th>
+          <th class="py-4 px-4 font-bold font-montserrat">Inventario</th>
+          <th class="py-4 px-6 w-20"></th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y divide-slate-900/60">
+        @for (product of products(); track product.id) {
+          <tr class="group hover:bg-slate-900/40 transition-colors duration-150">
+            <th class="px-6 py-4">
+              <label>
+                <input type="checkbox" class="checkbox checkbox-sm checkbox-accent rounded border-slate-700 bg-slate-950 focus:ring-accent" />
+              </label>
+            </th>
+
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-4">
+                <div class="avatar">
+                  <div class="mask mask-squircle h-12 w-12 bg-slate-950 border border-slate-800 p-0.5 group-hover:border-slate-700 transition-colors">
+                    <img
+                      [src]="product.images | productImage"
+                      [alt]="product.title"
+                      class="object-cover rounded-lg" />
+                  </div>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <a
+                    [routerLink]="['/admin/products', product.id]"
+                    class="text-sm font-semibold text-slate-200 hover:text-accent transition-colors duration-200 truncate max-w-[240px] md:max-w-xs">
+                    {{ product.title }}
+                  </a>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wide">Tallas:</span>
+                    <span class="text-xs text-slate-400 font-medium bg-slate-950/50 px-1.5 py-0.5 rounded border border-slate-800/60">
+                      {{ product.sizes.join(', ') }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td class="px-4 py-3 font-semibold text-slate-200 font-mono text-sm">
+              {{ product.price | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+
+            <td class="px-4 py-3">
+              @if (product.stock < 10) {
+                <div class="badge bg-error/10 border border-error/30 text-error text-xs font-bold rounded-lg px-2.5 py-1 flex items-center gap-1 w-fit">
+                  <span class="h-1.5 w-1.5 rounded-full bg-error animate-pulse"></span>
+                  {{ product.stock }} unidades
+                </div>
+              }
+              @else if(product.stock < 20) {
+                <div class="badge bg-warning/10 border border-warning/30 text-warning text-xs font-bold rounded-lg px-2.5 py-1 flex items-center gap-1 w-fit">
+                  <span class="h-1.5 w-1.5 rounded-full bg-warning"></span>
+                  {{ product.stock }} unidades
+                </div>
+              }
+              @else {
+                <div class="badge bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-xs font-medium rounded-lg px-2.5 py-1 flex items-center gap-1 w-fit">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  {{ product.stock }} en stock
+                </div>
+              }
+            </td>
+
+            <td class="px-6 py-4 text-right">
+              <a
+                [routerLink]="['/admin/products', product.id]"
+                class="btn btn-xs btn-ghost text-accent hover:bg-accent/10 border border-transparent hover:border-accent/20 rounded-lg px-3 transition-all duration-200">
+                Editar
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
+
+    </table>
+  </div>
+</div>
+<!-- <div class="card product-table">
   <div class="flex items-center justify-between mb-4">
     <h3 class="text-lg font-bold">Productos</h3>
     <div class="flex items-center gap-2">
-      <!-- <button class="ds-btn ds-btn--primary ds-btn--xs">Nuevo producto</button> -->
+
     </div>
   </div>
 
   <div class="overflow-x-auto">
     <table class="table w-full">
-    <!-- head -->
+
     <thead>
       <tr>
         <th>
@@ -23,7 +115,7 @@
       </tr>
     </thead>
     <tbody>
-      <!-- row 1 -->
+
        @for (product of products(); track product.id) {
         <tr class="hover:bg-white/2 transition-colors">
           <th>
@@ -71,4 +163,4 @@
 
     </tbody>
   </table>
-</div>
+</div> -->

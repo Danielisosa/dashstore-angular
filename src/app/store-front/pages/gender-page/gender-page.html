@@ -1,4 +1,42 @@
-<h1 class="text-3xl font-bold font-montserrat">Todos los productos
+<header class="relative mb-8 p-6 rounded-2xl bg-gradient-to-r from-slate-900/50 via-slate-900/20 to-transparent border border-slate-800/40 overflow-hidden">
+  <div class="absolute -top-10 -left-10 w-40 h-40 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
+
+  <h1 class="text-3xl md:text-4xl font-black font-montserrat tracking-tight text-white flex flex-col sm:flex-row sm:items-center gap-2">
+    <span>Colección</span>
+    <span class="bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent capitalize">
+      {{ gender() === 'kid' ? 'Niños' : gender() === 'women' ? 'Mujeres' : 'Hombres' }}
+    </span>
+  </h1>
+
+  <p class="text-sm md:text-base text-slate-400 mt-2 font-medium">
+    @switch (gender()) {
+      @case ('men') { Tendencias, estilo y confort urbano para el hombre moderno. }
+      @case ('women') { Diseños vanguardistas, elegancia y autenticidad para cada día. }
+      @case ('kid') { Ropa cómoda, duradera y divertida para los más pequeños. }
+      @default { Para todos los gustos y estilos. }
+    }
+  </p>
+</header>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
+  @for (product of productsResource.value()?.products; track product.id) {
+    <product-card [product]="product"/>
+  }
+  @empty {
+    <div class="col-span-full flex flex-col items-center justify-center p-12 rounded-2xl border border-dashed border-slate-800 bg-slate-900/20 text-center animate-fadeUp">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-slate-600 mb-3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4m0 0H4.5A2.25 2.25 0 0 0 2.25 12.75v5.625c0 1.036.84 1.875 1.875 1.875h15.75c1.036 0 1.875-.84 1.875-1.875V12.75A2.25 2.25 0 0 0 19.5 10.5h-3.75z" />
+      </svg>
+      <h3 class="text-lg font-bold text-slate-300">No se encontraron productos</h3>
+      <p class="text-sm text-slate-500 max-w-xs mt-1">Pronto tendremos nuevas prendas disponibles en esta categoría. ¡Mantente al tanto!</p>
+    </div>
+  }
+</div>
+
+<div class="mt-10 pt-6 border-t border-slate-900">
+  <app-pagination [pages]="productsResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()"/>
+</div>
+<!-- <h1 class="text-3xl font-bold font-montserrat">Todos los productos
   <span class="text-accent">{{ gender() }}</span></h1>
 <h2 class="text-xl mb-5">Para todos los gustos</h2>
 
@@ -14,4 +52,4 @@
 
 </div>
 
-<app-pagination [pages]="productsResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()"/>
+<app-pagination [pages]="productsResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()"/> -->

@@ -1,5 +1,131 @@
+<div class="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-accent/30 selection:text-accent-content">
+  <div class="flex">
 
-<div class="bg-base-100 overflow-y-scroll w-screen h-screen antialiased text-text selection:bg-primary selection:text-white">
+    <!-- 🧭 SIDEBAR: Menú Lateral Fijo -->
+    <aside id="menu" class="fixed left-0 top-0 z-20 h-screen w-64 border-r border-slate-900 bg-slate-950/80 backdrop-blur-xl flex flex-col justify-between p-4 transition-all duration-300">
+
+      <!-- Contenedor Superior: Logo, Perfil y Navegación -->
+      <div class="flex flex-col w-full">
+
+        <!-- Logo de la Marca -->
+        <div id="logo" class="my-4 px-2 flex flex-col items-center text-center">
+          <a routerLink="/" class="group flex items-center gap-2 text-xl font-montserrat font-black tracking-wider text-white">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-blue-600 shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-transform duration-300 group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true">
+                <path fill="currentColor" d="M7 7V6a5 5 0 0 1 10 0v1h1a1 1 0 0 1 1 1v10a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a1 1 0 0 1 1-1h1zM9 7a3 3 0 0 1 6 0v1H9V7z"/>
+              </svg>
+            </div>
+            <span class="bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">DashStore</span>
+          </a>
+          <span class="text-[10px] uppercase tracking-widest text-accent font-bold mt-2 px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
+            Admin Panel
+          </span>
+        </div>
+
+        <!-- Tarjeta de Perfil de Usuario Administrador -->
+        <div id="profile" class="my-4 mx-2 p-3 rounded-xl bg-slate-900/50 border border-slate-900 flex items-center gap-3">
+          <div class="relative">
+            <img
+              class="rounded-full w-9 h-9 object-cover border border-slate-800"
+              src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=128&q=80"
+              [alt]="user()?.fullName || 'Avatar'">
+            <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950"></span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs text-slate-400 font-medium">Bienvenido,</span>
+            <span class="text-sm font-bold text-slate-200 truncate">
+              {{ user()?.fullName || 'Admin User' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Enlaces de Navegación Interna -->
+        <nav id="nav" class="w-full flex flex-col gap-1.5 mt-4">
+
+          <!-- Item 1: Dashboard Overview -->
+          <a routerLink="/admin/product"
+             routerLinkActive="bg-slate-900 border-l-2 border-accent text-accent font-semibold"
+             [routerLinkActiveOptions]="{ exact: true }"
+             class="w-full px-3 py-2.5 rounded-xl inline-flex items-center gap-3 text-slate-400 hover:bg-slate-900/60 hover:text-white transition-all duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+            </svg>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold tracking-tight">Dashboard</span>
+              <span class="text-[10px] opacity-60">Resumen de datos</span>
+            </div>
+          </a>
+
+          <!-- Item 2: Catálogo de Productos -->
+          <a routerLink="/admin/products"
+             routerLinkActive="bg-slate-900 border-l-2 border-accent text-accent font-semibold"
+             class="w-full px-3 py-2.5 rounded-xl inline-flex items-center gap-3 text-slate-400 hover:bg-slate-900/60 hover:text-white transition-all duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+            </svg>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold tracking-tight">Productos</span>
+              <span class="text-[10px] opacity-60">Inventario general</span>
+            </div>
+          </a>
+
+          <!-- Item 3: Gestión de Órdenes/Pedidos (Nueva) -->
+          <a routerLink="/admin/orders"
+             routerLinkActive="bg-slate-900 border-l-2 border-accent text-accent font-semibold"
+             class="w-full px-3 py-2.5 rounded-xl inline-flex items-center gap-3 text-slate-400 hover:bg-slate-900/60 hover:text-white transition-all duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold tracking-tight">Órdenes</span>
+              <span class="text-[10px] opacity-60">Ventas y pedidos</span>
+            </div>
+          </a>
+
+          <!-- Item 4: Gestión de Usuarios (Nueva) -->
+          <a routerLink="/admin/users"
+             routerLinkActive="bg-slate-900 border-l-2 border-accent text-accent font-semibold"
+             class="w-full px-3 py-2.5 rounded-xl inline-flex items-center gap-3 text-slate-400 hover:bg-slate-900/60 hover:text-white transition-all duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+            </svg>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold tracking-tight">Usuarios</span>
+              <span class="text-[10px] opacity-60">Control de clientes</span>
+            </div>
+          </a>
+
+        </nav>
+      </div>
+
+      <!-- Contenedor Inferior: Botón de Salida -->
+      <div class="w-full pt-4 border-t border-slate-900">
+        <button
+          class="btn btn-sm btn-outline btn-error w-full rounded-xl flex items-center justify-center gap-2 font-semibold"
+          (click)="onLogout()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+          </svg>
+          Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- 💻 ÁREA DE CONTENIDO PRINCIPAL -->
+    <div class="flex-1 ml-64 min-h-screen flex flex-col bg-slate-950">
+      <div class="p-6 md:p-8 max-w-7xl w-full mx-auto flex-grow">
+
+        <!-- Contenido Dinámico inyectado por el Router -->
+        <main class="animate-fadeIn">
+          <router-outlet />
+        </main>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- <div class="bg-base-100 overflow-y-scroll w-screen h-screen antialiased text-text selection:bg-primary selection:text-white">
     <div class="flex flex-col relative w-screen">
         <div id="menu" class=" min-h-screen z-10 text-text w-64 fixed left-0 h-screen overflow-y-auto">
             <div id="logo" class="my-6 px-6 flex flex-col items-center text-center">
@@ -65,7 +191,7 @@
                         <h2 class="text-2xl font-bold ds-brand-gradient">Panel de control</h2>
                         <p class="text-sm text-muted">Resumen rápido y accesos</p>
                     </div>
-                  
+
                 </header>
 
                 <main>
@@ -74,4 +200,4 @@
             </div>
         </div>
     </div>
-<!-- </div> -->
+</div> -->
