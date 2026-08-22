@@ -6,6 +6,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { User } from '@auth/interfaces/user.interface';
 import { catchError, map, Observable, of, tap } from 'rxjs';
+import { CartService } from 'src/app/cart/services/Cart';
 import { environment } from 'src/environments/environment';
 
 type AuthStatus= 'checking'| 'authenticated' | 'not-authenticated';
@@ -21,6 +22,10 @@ export class AuthService {
   private http=inject(HttpClient);
    router= inject(Router);
 
+
+   private cartService = inject(CartService);
+
+
   checkStatusResource= rxResource({
     loader: ()=> this.checkStatus(),
   });
@@ -31,6 +36,7 @@ export class AuthService {
 
     if(this._user()){
       return 'authenticated';
+
     }
 
     return 'not-authenticated';
@@ -85,9 +91,10 @@ export class AuthService {
     this._authStatus.set('not-authenticated')
 
     localStorage.removeItem('token');
+    this.cartService.clearCartState();
 
     this.router.navigateByUrl('/', { replaceUrl: true }).catch(()=>{
-    
+
       window.location.href = '/';
     });
   }
@@ -98,8 +105,10 @@ export class AuthService {
     this._token.set(token)
 
     localStorage.setItem('token', token);
+    this.cartService.loadCart();
     return true;
   }
+
 
   private handleAuthError(error:any){
     this.logout();

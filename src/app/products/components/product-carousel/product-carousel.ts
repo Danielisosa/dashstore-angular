@@ -6,6 +6,7 @@ import { Navigation, Pagination } from 'swiper/modules'
 // import 'swiper/css/navigation';
 // import 'swiper/css/pagination';
 import { ProductImagePipe } from "../../pipes/product-image.pipe";
+import { ProductImageValue } from '@products/interfaces/product.interface';
 
 @Component({
   selector: 'product-carousel',
@@ -14,7 +15,7 @@ import { ProductImagePipe } from "../../pipes/product-image.pipe";
   styleUrls: ['./product-carousel.css'],
 })
 export class ProductCarousel implements AfterViewInit, OnChanges {
-  images = input<string[]>();
+  images = input<ProductImageValue[]>();
   swiperDiv=viewChild<ElementRef>('swiperDiv')
 
   swiper: Swiper | undefined = undefined;

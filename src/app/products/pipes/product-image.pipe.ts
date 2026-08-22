@@ -1,31 +1,47 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ProductImageItem, ProductImageValue } from '@products/interfaces/product.interface';
 import { environment } from 'src/environments/environment';
 
 const baseUrl = environment.baseUrl;
+const fallbackImage = '/assets/images/no-image.jpg';
 
 @Pipe({
   name: 'productImage'
 })
-
 export class ProductImagePipe implements PipeTransform {
-  transform(value: null | undefined | string | string[]): string{
+  transform(value: null | undefined | ProductImageValue | ProductImageValue[]): string {
+    const rawValues = Array.isArray(value)
+      ? value
+      : value !== null && value !== undefined
+        ? [value]
+        : [];
 
-    if(value === null || value === undefined){
-      return './assets/images/no-image.jpg';
+    const image = rawValues
+      .map(item => {
+        if (typeof item === 'string') return item.trim();
+        if (item && typeof item === 'object' && typeof item.url === 'string') return item.url.trim();
+        return '';
+      })
+      .find(item => !!item);
+
+    if (!image) {
+      return fallbackImage;
     }
 
-    if(typeof value=== 'string' && value.startsWith('blob:')){
-      return value;
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('data:') || image.startsWith('blob:')) {
+      return image;
     }
 
-    if(typeof value === 'string'){
-      return `${baseUrl}/files/product/${value}`;
+    if (image.startsWith('/')) {
+      return image;
     }
 
-    const image = value.length ? value[0] : undefined;
+    if (image.startsWith('assets/')) {
+      return `/${image}`;
+    }
 
-    if( !image){
-      return './assets/images/no-image.jpg'
+    if (image.includes('/files/product/') || image.includes('/uploads/') || image.includes('/images/')) {
+      return image.startsWith('/') ? image : `/${image}`;
     }
 
     return `${baseUrl}/files/product/${image}`;

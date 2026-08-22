@@ -6,6 +6,13 @@ export interface ProductsResponse {
   products: Product[];
 }
 
+export interface ProductImageItem {
+  id?: number | string;
+  url: string;
+}
+
+export type ProductImageValue = string | ProductImageItem;
+
 export interface Product {
   id:          string;
   title:       string;
@@ -16,7 +23,7 @@ export interface Product {
   sizes:       Size[];
   gender:      Gender;
   tags:        string[];
-  images:      string[];
+  images:      ProductImageValue[];
   user:        User;
 }
 

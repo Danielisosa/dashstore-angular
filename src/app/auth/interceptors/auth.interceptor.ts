@@ -9,6 +9,11 @@ export function authInterceptor(
 ){
   const token =inject(AuthService).token();
 
+  // Si no hay token (usuario no logueado), enviamos la petición original sin alterarla
+  if (!token) {
+    return next(req);
+  }
+
   const newReq= req.clone({
     headers: req.headers.append('Authorization', `Bearer ${token}`),
 

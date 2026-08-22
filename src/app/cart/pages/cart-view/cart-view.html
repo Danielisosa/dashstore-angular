@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.08),_transparent_28%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 md:px-8 md:py-8">
+  <div class="mx-auto max-w-6xl">
+    <header class="mb-8 flex flex-col gap-4 border-b border-slate-800/80 pb-5 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="text-[11px] font-bold uppercase tracking-[0.32em] text-slate-400">Carrito</p>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-white md:text-3xl">
+          Tu compra
+          <span class="text-accent">({{ cartService.totalItems() }})</span>
+        </h1>
+      </div>
+
+      <a
+        routerLink="/"
+        class="btn btn-ghost btn-sm rounded-xl border border-slate-800 bg-slate-900/60 text-slate-300 hover:bg-slate-800 hover:text-white"
+      >
+        ← Seguir comprando
+      </a>
+    </header>
+
+    @if (cartService.loading()) {
+      <div class="mb-6 h-2 w-full overflow-hidden rounded-full bg-slate-900">
+        <div class="h-full w-1/2 animate-pulse rounded-full bg-gradient-to-r from-accent to-primary"></div>
+      </div>
+    }
+
+    @if (cartService.cartItems().length === 0) {
+      <div class="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center shadow-[0_0_30px_rgba(15,23,42,0.45)] backdrop-blur-sm">
+        <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-slate-700 bg-slate-950 text-2xl shadow-[0_0_18px_rgba(34,211,238,0.12)] text-slate-300">
+          🛒
+        </div>
+        <p class="text-xl font-semibold tracking-wide text-white">Tu carrito está vacío</p>
+        <p class="mt-2 max-w-md text-sm text-slate-400">Añade prendas para continuar con tu pedido.</p>
+        <a routerLink="/products" class="btn btn-primary mt-6 rounded-xl px-6 text-sm font-bold uppercase tracking-[0.16em]">
+          Explorar catálogo
+        </a>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.5fr_0.9fr]">
+        <div class="space-y-4">
+          @for (item of cartService.cartItems(); track item.id) {
+            <article class="group flex flex-col gap-4 rounded-3xl border border-slate-800 bg-slate-900/75 p-4 shadow-[0_20px_50px_rgba(2,6,23,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-700 hover:shadow-[0_25px_60px_rgba(14,116,144,0.12)] sm:flex-row sm:items-center">
+              <div class="relative h-28 w-28 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-inner shadow-slate-950/60">
+                <img
+                  [src]="item.product.images | productImage"
+                  [alt]="item.product.title"
+                  class="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='/assets/images/no-image.jpg';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/10 via-transparent to-transparent"></div>
+              </div>
+
+              <div class="flex-1">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div class="min-w-0">
+                    <h3 class="text-base font-semibold text-white group-hover:text-accent transition-colors duration-200">
+                      {{ item.product.title }}
+                    </h3>
+                    @if (item.size) {
+                      <span class="mt-2 inline-flex items-center rounded-full border border-slate-700 bg-slate-950/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">
+                        Talla: {{ item.size }}
+                      </span>
+                    }
+                  </div>
+
+                  <p class="text-base font-semibold text-accent">
+                    {{ item.product.price | currency:'USD':'symbol':'1.2-2' }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-3 sm:justify-end">
+                <div class="flex items-center overflow-hidden rounded-xl border border-slate-700 bg-slate-950/80">
+                  <button
+                    [disabled]="cartService.loading()"
+                    (click)="cartService.updateQuantity(item.id, item.quantity - 1)"
+                    class="h-10 w-10 text-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-white disabled:opacity-50"
+                    aria-label="Disminuir cantidad"
+                  >
+                    −
+                  </button>
+                  <span class="min-w-10 text-center text-sm font-semibold text-slate-100">{{ item.quantity }}</span>
+                  <button
+                    [disabled]="cartService.loading()"
+                    (click)="cartService.updateQuantity(item.id, item.quantity + 1)"
+                    class="h-10 w-10 text-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-white disabled:opacity-50"
+                    aria-label="Aumentar cantidad"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  [disabled]="cartService.loading()"
+                  (click)="cartService.removeFromCart(item.id)"
+                  class="btn btn-ghost btn-sm rounded-lg border border-slate-800 bg-slate-950/50 text-slate-400 hover:bg-error/10 hover:text-error"
+                  aria-label="Eliminar producto"
+                  title="Eliminar producto"
+                >
+                  Quitar
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+
+        <aside class="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-[0_20px_50px_rgba(2,6,23,0.45)] backdrop-blur-sm">
+          <h2 class="border-b border-slate-800 pb-3 text-lg font-semibold uppercase tracking-[0.2em] text-accent">
+            Resumen
+          </h2>
+
+          <div class="mt-5 space-y-4 text-sm text-slate-300">
+            <div class="flex items-center justify-between">
+              <span>Subtotal</span>
+              <span class="font-medium text-slate-100">{{ cartService.subtotal() | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Impuestos (16%)</span>
+              <span class="font-medium text-slate-100">{{ cartService.tax() | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-800 pt-4 text-base font-semibold">
+              <span class="text-slate-200">Total</span>
+              <span class="text-accent">{{ cartService.totalPrice() | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+          </div>
+
+          <button
+            [disabled]="cartService.loading()"
+            class="btn btn-primary mt-6 w-full rounded-xl px-4 text-sm font-bold uppercase tracking-[0.2em]"
+          >
+            Proceder al pago
+          </button>
+        </aside>
+      </div>
+    }
+  </div>
+</div>
