@@ -17,13 +17,16 @@ import { map } from 'rxjs';
 export class HomePage {
   productsService = inject(ProductsService);
   paginationService = inject(PaginationService)
+  private route = inject(ActivatedRoute);
+  private searchSignal = toSignal(this.route.queryParamMap.pipe(map(m => m.get('search') || '')));
 
   productsResource= rxResource({
-    request: () =>({ page: this.paginationService.currentPage()-1}),
+    request: () =>({ page: this.paginationService.currentPage()-1, search: this.searchSignal() }),
     loader: ({ request })=>
       {
       return this.productsService.getProducts({
-        offset: request.page*9
+        offset: request.page*9,
+        search: request.search
       });
     }
   });

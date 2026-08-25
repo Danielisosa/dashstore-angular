@@ -43,7 +43,7 @@
 
     <button
       class="btn h-11 min-h-11 bg-accent hover:bg-accent/90 text-slate-950 font-black border-none rounded-xl mt-2 transition-all duration-200 shadow-[0_0_15px_rgba(0,242,254,0.15)] hover:shadow-[0_0_25px_rgba(0,242,254,0.35)]"
-      type="submit">
+      type="submit" [disabled]="isPosting()">
       Iniciar Sesión
     </button>
 
@@ -54,12 +54,11 @@
 
   </form>
 </div>
-
-@if(hasError()){
-  <div role="alert" class="alert bg-error/10 border border-error/20 text-error text-xs font-semibold p-4 rounded-xl shadow-xl animate-fadeIn fixed bottom-5 right-5 w-72 flex gap-3 items-center backdrop-blur-md">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 stroke-current text-error" fill="none" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-    <span>Por favor, revise la información ingresada.</span>
-  </div>
-}
+  @if(errorMessage()){
+    <div role="alert" class="alert bg-error/10 border border-error/20 text-error text-xs font-semibold p-4 rounded-xl shadow-xl animate-fadeIn fixed bottom-5 right-5 w-72 flex gap-3 items-center backdrop-blur-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 stroke-current text-error" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }

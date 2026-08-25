@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '@auth/interfaces/user.interface';
 import { Gender, Product, ProductsResponse } from '@products/interfaces/product.interface';
-import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 const baseUrl= environment.baseUrl;
@@ -11,6 +11,7 @@ interface Options{
   limit?: number;
   offset?: number;
   gender?: string;
+  search?: string;
 }
 
 const emptyProduct: Product = {
@@ -39,25 +40,33 @@ export class ProductsService {
 
   getProducts(options: Options):Observable<ProductsResponse>{
 
-    const { limit= 9, offset= 0, gender= ''}= options;
+    const { limit= 9, offset= 0, gender= '', search = ''}= options;
 
-    const key= `${limit}-${offset}-${gender}`;
+    const key= `${limit}-${offset}-${gender}-${search}`;
     if(this.productsCache.has(key)){
       return of(this.productsCache.get(key)!);
     }
 
-    return this.http.get<ProductsResponse>(
-      `${baseUrl}/products`, {
-        params: {
-          limit,
-          offset,
-          gender
-        }
-      }
-    )
-    .pipe(
-      tap((resp)=>console.log(resp)),
-      tap((resp)=>this.productsCache.set(key, resp)))
+    const tryParamNames = (names: string[]): Observable<ProductsResponse> => {
+      const paramName = names[0];
+      const params: any = { limit, offset, gender };
+      if (search) params[paramName] = search;
+
+      return this.http.get<ProductsResponse>(`${baseUrl}/products`, { params }).pipe(
+        tap((resp) => console.log(resp)),
+        tap((resp) => this.productsCache.set(key, resp)),
+        catchError((err) => {
+          const msg = err?.error?.message ? String(err.error.message) : '';
+          if (names.length > 1 && (err?.status === 400 || msg.includes('should not exist'))) {
+            // Try next possible param name
+            return tryParamNames(names.slice(1));
+          }
+          return throwError(() => err);
+        })
+      );
+    };
+
+    return tryParamNames(['search', 'q', 'query', 'title']);
 
   }
 
@@ -104,9 +113,6 @@ export class ProductsService {
         (tap((product)=> this.updateProductCache(product))
         )
       )
-    //   return this.http.patch<Product>(`${baseUrl}/products/${id}`, productLike)
-    //   .pipe(tap((product)=> this.updateProductCache(product))
-    // )
 
   }
   createProduct(productLike: Partial<Product>, imageFileList?: FileList): Observable<Product>{
@@ -123,8 +129,7 @@ export class ProductsService {
         (tap((product)=> this.productCache.set(product.id, product))
         )
       )
-      // return this.http.post<Product>(`${baseUrl}/products`, productLike)
-      // .pipe(tap((product)=> this.productCache.set(product.id, product)))
+
   }
 
   updateProductCache(product: Product){

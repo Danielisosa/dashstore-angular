@@ -1,0 +1,243 @@
+<div class="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans">
+      <div class="max-w-5xl mx-auto space-y-8 animate-fadeIn">
+
+        <!-- Header -->
+        <header class="flex items-end justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div>
+            <p class="text-[11px] font-bold uppercase tracking-[0.28em] text-slate-400">Cuenta</p>
+            <h1 class="mt-2 text-2xl font-black font-montserrat text-white tracking-tight">
+              Perfil de Usuario
+            </h1>
+          </div>
+          <span class="inline-flex items-center rounded-full border border-accent/20 bg-accent/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-accent">
+            Dashboard
+          </span>
+        </header>
+
+        <!-- Mensajes Globales -->
+        @if (successMessage()) {
+          <div class="p-4 rounded-xl bg-accent/10 border border-accent/20 text-accent text-xs font-semibold flex items-center gap-2 animate-fadeIn">
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        @if (errorMessage()) {
+          <div class="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-xs font-semibold flex items-center gap-2 animate-fadeIn">
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          <!-- Card de Identidad -->
+          <div class="lg:col-span-1">
+            <div class="relative flex flex-col items-center rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center shadow-[0_20px_50px_rgba(2,6,23,0.45)] backdrop-blur-sm">
+
+              <!-- Badge Rango -->
+              <div class="absolute right-4 top-4">
+                <span class="rounded-full border border-accent/20 bg-accent/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
+                  {{ authService.isAdmin() ? 'Administrador' : 'Cliente' }}
+                </span>
+              </div>
+
+              <!-- Avatar con Glow Accent -->
+              <div class="relative mb-4 mt-2 h-28 w-28 overflow-hidden rounded-full border border-slate-800 bg-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.12)]">
+                <img
+                  [src]="userService.userAvatar() || '/assets/images/no-image.jpg'"
+                  [alt]="userService.userName()"
+                  (error)="$any($event.target).src = '/assets/images/no-image.jpg'"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+
+              <h2 class="text-lg font-black text-white font-montserrat">
+                {{ userService.userName() }}
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5 mb-6">
+                {{ userService.userEmail() }}
+              </p>
+
+              <!-- Meta Info -->
+              <div class="w-full border-t border-slate-800/60 pt-4 space-y-2 text-xs text-left">
+                <div class="flex justify-between text-slate-400">
+                  <span>ID:</span>
+                  <span class="text-slate-200 font-mono">{{ userService.user()?.id?.slice(0, 8) || 'N/A' }}...</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                  <span>Estado:</span>
+                  <span class="text-accent font-semibold">Activo</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                  <span>Teléfono:</span>
+                  <span class="text-slate-200">{{ userService.user()?.phone || 'Sin registrar' }}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Información del Perfil (Solo Lectura con Acciones) -->
+          <div class="lg:col-span-2">
+            <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-[0_20px_50px_rgba(2,6,23,0.45)] backdrop-blur-sm space-y-6">
+
+              <h3 class="border-b border-slate-800/80 pb-3 text-base font-bold uppercase tracking-[0.18em] text-slate-200">
+                Información del Perfil
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-1">
+                  <span class="text-slate-400 block font-semibold">Nombre Completo</span>
+                  <span class="text-slate-200 text-sm font-medium">{{ userService.userName() || 'Sin registrar' }}</span>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-1">
+                  <span class="text-slate-400 block font-semibold">Correo Electrónico</span>
+                  <span class="text-slate-200 text-sm font-medium">{{ userService.userEmail() || 'Sin registrar' }}</span>
+                </div>
+              </div>
+
+              <!-- Sección Dirección de Envío -->
+              <div class="pt-2 border-t border-slate-800/60 space-y-3">
+                <span class="text-xs font-bold uppercase tracking-[0.18em] text-accent">
+                  Dirección de Envío
+                </span>
+
+                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-300 space-y-2">
+                  <p><span class="text-slate-400 font-semibold">Calle / Sector:</span> {{ userService.user()?.address?.street || 'No especificada' }}</p>
+                  <p><span class="text-slate-400 font-semibold">Ubicación:</span> {{ userService.user()?.address?.city || '-' }}, {{ userService.user()?.address?.state || '-' }} ({{ userService.user()?.address?.country || '-' }})</p>
+                </div>
+              </div>
+
+              <!-- Botones de Acción -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                <button
+                  (click)="openModal('edit')"
+                  class="btn h-11 min-h-11 bg-accent hover:bg-accent/90 text-slate-950 font-black border-none rounded-xl transition-all duration-200 shadow-[0_0_15px_rgba(0,242,254,0.15)] hover:shadow-[0_0_25px_rgba(0,242,254,0.35)]"
+                >
+                  Editar Perfil
+                </button>
+
+                <button
+                  (click)="openModal('password')"
+                  class="btn h-11 min-h-11 bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-200 font-bold rounded-xl transition-all duration-200"
+                >
+                  Cambiar Contraseña
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE EDICIÓN DE PERFIL -->
+    @if (modalMode() === 'edit') {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+        <div class="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-[0_20px_50px_rgba(2,6,23,0.8)]">
+          <h3 class="mb-6 border-b border-slate-800/80 pb-3 text-base font-bold uppercase tracking-[0.18em] text-slate-200">
+            Editar Perfil
+          </h3>
+
+          <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()" class="flex flex-col gap-4">
+            
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs text-slate-400">Nombre Completo</label>
+              <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                <input type="text" formControlName="fullName" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Tu nombre completo" />
+              </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs text-slate-400">Teléfono</label>
+                <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                  <input type="text" formControlName="phone" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="+584120000000" />
+                </label>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs text-slate-400">URL del Avatar</label>
+                <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                  <input type="text" formControlName="avatarUrl" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="https://..." />
+                </label>
+              </div>
+            </div>
+
+            <div formGroupName="address" class="flex flex-col gap-3 pt-4 border-t border-slate-800/60">
+              <span class="text-xs font-bold text-accent">Dirección de Envío</span>
+
+              <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                <input type="text" formControlName="street" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Calle / Avenida / Sector" />
+              </label>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                  <input type="text" formControlName="city" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Ciudad" />
+                </label>
+                <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                  <input type="text" formControlName="state" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Estado" />
+                </label>
+                <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                  <input type="text" formControlName="country" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="País" />
+                </label>
+              </div>
+            </div>
+
+            <div class="flex gap-3 mt-4">
+              <button type="button" (click)="closeModal()" class="btn flex-1 h-11 bg-slate-950 border border-slate-800 text-slate-400 rounded-xl">
+                Cancelar
+              </button>
+              <button type="submit" [disabled]="profileForm.invalid || userService.loading()" class="btn flex-1 h-11 bg-accent text-slate-950 font-black border-none rounded-xl shadow-[0_0_15px_rgba(0,242,254,0.15)] disabled:opacity-50">
+                {{ userService.loading() ? 'Guardando...' : 'Guardar Cambios' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <!-- MODAL CAMBIAR CONTRASEÑA -->
+    @if (modalMode() === 'password') {
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+        <div class="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-[0_20px_50px_rgba(2,6,23,0.8)]">
+          <h3 class="mb-6 border-b border-slate-800/80 pb-3 text-base font-bold uppercase tracking-[0.18em] text-slate-200">
+            Cambiar Contraseña
+          </h3>
+
+          <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="flex flex-col gap-4">
+            
+            <div class="flex flex-col gap-1.5">
+              <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                <input type="password" formControlName="currentPassword" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Contraseña Actual" />
+              </label>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                <input type="password" formControlName="newPassword" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Nueva Contraseña" />
+              </label>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="input bg-slate-950 border-slate-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent flex items-center gap-3 px-3 py-2 rounded-xl transition-all h-11">
+                <input type="password" formControlName="confirmPassword" class="grow bg-transparent text-sm text-slate-200 placeholder-slate-500 focus:outline-none" placeholder="Confirmar Nueva Contraseña" />
+              </label>
+              @if (passwordForm.hasError('passwordsMismatch') && passwordForm.get('confirmPassword')?.touched) {
+                <span class="text-[11px] text-error pl-1">Las contraseñas no coinciden.</span>
+              }
+            </div>
+
+            <div class="flex gap-3 mt-4">
+              <button type="button" (click)="closeModal()" class="btn flex-1 h-11 bg-slate-950 border border-slate-800 text-slate-400 rounded-xl">
+                Cancelar
+              </button>
+              <button type="submit" [disabled]="passwordForm.invalid || userService.loading()" class="btn flex-1 h-11 bg-accent text-slate-950 font-black border-none rounded-xl shadow-[0_0_15px_rgba(0,242,254,0.15)] disabled:opacity-50">
+                {{ userService.loading() ? 'Actualizando...' : 'Actualizar Clave' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }

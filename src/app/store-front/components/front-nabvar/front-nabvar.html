@@ -32,10 +32,11 @@
 
     <div class="flex items-center gap-3">
 
-      <form role="search" aria-label="Buscar productos" class="hidden md:block relative group">
+      <form role="search" aria-label="Buscar productos" class="hidden md:block relative group" (ngSubmit)="onSearch(navSearch.value, $event)">
         <label for="nav-search" class="sr-only">Buscar productos</label>
         <input
           id="nav-search"
+          #navSearch
           type="search"
           placeholder="Buscar prendas..."
           class="w-48 lg:w-64 pl-9 pr-4 py-1.5 text-sm rounded-full bg-slate-900 border border-slate-800 text-slate-200 placeholder-slate-500 transition-all duration-300 focus:w-56 lg:focus:w-72 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent focus:shadow-[0_0_15px_rgba(0,242,254,0.1)]" />
@@ -141,12 +142,6 @@
         </div>
       </div>
 
-      <!-- <button aria-label="Ver carrito" class="btn btn-ghost btn-sm btn-circle relative text-slate-400 hover:text-accent hover:bg-slate-800/50">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4m0 0H4.5A2.25 2.25 0 0 0 2.25 12.75v5.625c0 1.036.84 1.875 1.875 1.875h15.75c1.036 0 1.875-.84 1.875-1.875V12.75A2.25 2.25 0 0 0 19.5 10.5h-3.75z" />
-        </svg>
-        <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-slate-950 shadow-sm animate-pulse">0</span>
-      </button> -->
 
       <div class="h-5 w-[1px] bg-slate-800 hidden sm:block"></div>
 
@@ -156,9 +151,11 @@
         }
 
         @if(authService.authStatus() === 'authenticated'){
-          <span class="hidden sm:inline text-xs font-medium text-slate-400 max-w-[100px] truncate">
+            <a routerLink="/profile" class="hidden sm:inline text-xs font-bold ds-title-gradient max-w-[100px] truncate hover:bg-accent/10"> {{ authService.user()?.fullName }}</a>
+        
+          <!-- <span class="hidden sm:inline text-xs font-medium text-slate-400 max-w-[100px] truncate">
             {{ authService.user()?.fullName }}
-          </span>
+          </span> -->
           <button class="btn btn-sm btn-outline btn-error rounded-xl px-3" (click)="authService.logout()">
             Salir
           </button>

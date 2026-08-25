@@ -3,6 +3,8 @@ import { AdminDashboardLayout } from './layouts/admin-dashboard-layout/admin-das
 import { ProductAdminPage } from './pages/product-admin-page/product-admin-page';
 import { ProductsAdminPage } from './pages/products-admin-page/products-admin-page';
 import { IsAdminGuard } from '@auth/guards/is-admin-guard';
+import { Profile } from '../users/componentes/profile/profile';
+import { UsersList } from '../users/componentes/UsersList/UsersList';
 
 export const adminDashboardRoutes: Routes= [
   {
@@ -17,6 +19,14 @@ export const adminDashboardRoutes: Routes= [
       {
         path: 'products/:id',
         component: ProductAdminPage
+      },
+      {
+        path: 'profile',
+        component: Profile
+      },
+      {
+        path: 'users',
+        component: UsersList
       },
       {
         path: '**',

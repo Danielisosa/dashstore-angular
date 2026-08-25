@@ -53,35 +53,36 @@ export class RegisterPage {
 
           this.showSuccess.set(true);
 
-          setTimeout(() => {
-            this.showSuccess.set(false);
-            this.router.navigateByUrl('/auth/login'); // 🚀
-          }, 3000);
+            setTimeout(() => {
+              this.showSuccess.set(false);
+              this.router.navigateByUrl('/auth/login'); // 🚀
+            }, 3000);
         } else {
           this.errorMessage.set('Ocurrió un problema inesperado. Intente nuevamente.');
           this.triggerError();
         }
       },
-      error: (err) => {
-        this.isPosting.set(false);
+        error: (err) => {
+          this.isPosting.set(false);
 
-        if (err.error?.message) {
-          const rawMessage = Array.isArray(err.error.message) ? err.error.message[0] : err.error.message;
-
-
-          if (rawMessage.includes('password must have a Uppercase')) {
-            this.errorMessage.set('Tu contraseña es muy débil. Asegúrate de incluir una letra mayúscula, una minúscula y al menos un número.');
-          } else if (rawMessage.includes('already exists') || err.status === 409) {
-            this.errorMessage.set('Este correo electrónico ya está registrado en nuestra plataforma.');
+          // Preferir el mensaje del backend cuando exista
+          if (err?.error?.message) {
+            const rawMessage = Array.isArray(err.error.message) ? err.error.message[0] : err.error.message;
+            if (rawMessage.includes('password must have a Uppercase')) {
+              this.errorMessage.set('Tu contraseña es muy débil. Asegúrate de incluir una letra mayúscula, una minúscula y al menos un número.');
+            } else if (rawMessage.includes('already exists') || err.status === 409) {
+              this.errorMessage.set('Este correo electrónico ya está registrado en nuestra plataforma.');
+            } else {
+              this.errorMessage.set(rawMessage || 'La información ingresada no cumple con los requisitos del sistema.');
+            }
+          } else if (err?.message) {
+            this.errorMessage.set(err.message);
           } else {
-            this.errorMessage.set('La información ingresada no cumple con los requisitos del sistema.');
+            this.errorMessage.set('Hubo un fallo de comunicación con el servidor. Inténtalo más tarde.');
           }
-        } else {
-          this.errorMessage.set('Hubo un fallo de comunicación con el servidor. Inténtalo más tarde.');
-        }
 
-        this.triggerError();
-      }
+          this.triggerError();
+        }
     });
   }
 
@@ -89,6 +90,6 @@ export class RegisterPage {
     this.hasError.set(true);
     setTimeout(() => {
       this.hasError.set(false);
-    }, 4500);
+    }, 5000);
   }
 }

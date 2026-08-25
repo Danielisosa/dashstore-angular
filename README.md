@@ -13,6 +13,13 @@
 * **Estilos:** Tailwind,  CSS
 * **Herramientas:** VS Code, Git / GitHub
 
+Para ingresar a la plataforma y explorar las distintas funcionalidades según el rol, puedes utilizar los siguientes usuarios de acceso:
+
+| Rol | Email / Usuario | Contraseña |
+| :--- | :--- | :--- |
+| 👑 **Administrador** | `test1@google.com` | `Abc123` |
+| 🛍️ **Cliente / Usuario** | `test2@google.com` | `Abc123` |
+
 ## 📦 Instalación y Configuración
 
 1. Clonar el repositorio:

@@ -4,6 +4,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "rootDir": "./src",
+    "ignoreDeprecations": "5.0",
     "paths": {
       "@auth/*":["./src/app/auth/*"],
       "@dashboard/*":["./src/app/admin-dashboard*"],

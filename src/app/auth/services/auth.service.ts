@@ -5,7 +5,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { User } from '@auth/interfaces/user.interface';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { CartService } from 'src/app/cart/services/Cart';
 import { environment } from 'src/environments/environment';
 
@@ -52,7 +52,12 @@ export class AuthService {
       password: password
     }).pipe(
       map(resp=> this.handleAuthSuccess(resp)),
-      catchError((error: any)=>this.handleAuthError(error))
+      catchError((error: any)=>{
+        this._authStatus.set('not-authenticated');
+        this._user.set(null);
+        this._token.set(null);
+        return throwError(()=> error);
+      })
     )
   }
 
@@ -63,7 +68,12 @@ export class AuthService {
       password: password
     }).pipe(
       map(resp=> this.handleAuthSuccess(resp)),
-      catchError((error: any)=>this.handleAuthError(error))
+      catchError((error: any)=>{
+        this._authStatus.set('not-authenticated');
+        this._user.set(null);
+        this._token.set(null);
+        return throwError(()=> error);
+      })
     )
   }
 

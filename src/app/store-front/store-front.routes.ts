@@ -5,6 +5,7 @@ import { GenderPage } from "./pages/gender-page/gender-page";
 import { ProductPage } from "./pages/product-page/product-page";
 import { NotFoundPage } from './pages/not-found-page/not-found-page';
 import { CartView } from "../cart/pages/cart-view/cart-view";
+import { Profile } from "../users/componentes/profile/profile";
 
 export const storeFrontRoutes:Routes=[
   {
@@ -26,6 +27,11 @@ export const storeFrontRoutes:Routes=[
        {
         path: 'cart',
         component: CartView
+      },
+    
+      {
+        path: 'profile',
+        component: Profile
       },
       {
         path: '**',

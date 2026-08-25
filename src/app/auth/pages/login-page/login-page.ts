@@ -13,6 +13,7 @@ export class LoginPage {
 
   fb= inject(FormBuilder);
   hasError= signal(false);
+  errorMessage = signal<string | null>(null);
   isPosting= signal(false)
   router= inject(Router);
 
@@ -33,17 +34,23 @@ export class LoginPage {
     }
 
     const{ email= '', password=''}=this.loginForm.value;
+    this.isPosting.set(true);
+    this.errorMessage.set(null);
 
-    this.authService.login(email!, password!).subscribe(isAuthenticated=>{
-     if(isAuthenticated){
-      this.router.navigateByUrl('/');
-      return;
-     }
-
-     this.hasError.set(true);
-     setTimeout(()=>{
-      this.hasError.set(false);
-     }, 2000);
+    this.authService.login(email!, password!).subscribe({
+      next: (isAuthenticated) => {
+        this.isPosting.set(false);
+        if (isAuthenticated) {
+          this.router.navigateByUrl('/');
+        }
+      },
+      error: (err) => {
+        this.isPosting.set(false);
+        const msg = err?.error?.message || 'Credenciales inválidas. Revisa tus datos.';
+        this.errorMessage.set(msg);
+        // Auto-hide after 5s
+        setTimeout(()=> this.errorMessage.set(null), 5000);
+      }
     })
   }
  }
