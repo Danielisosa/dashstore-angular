@@ -8,8 +8,8 @@ import { UserService } from 'src/app/core/services/user.service';
 @Component({
   selector: 'app-users-list',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './UsersList.html',
-  styleUrl: './UsersList.css',
+  templateUrl: './usersList.html',
+  styleUrl: './usersList.css',
 })
 export class UsersList {
   readonly userService = inject(UserService);
