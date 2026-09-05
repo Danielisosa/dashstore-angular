@@ -43,9 +43,34 @@ export class UsersList {
   loadUsers(): void {
     const search = this.searchControl.value || '';
     this.userService.getUsers(this.limit(), this.offset(), search).subscribe({
-      next: (res) => {
-        this.users.set(res.users);
-        this.totalUsers.set(res.total);
+      next: (res: any) => {
+     
+        let usersArr: any[] = [];
+        let total = 0;
+
+        if (Array.isArray(res)) {
+          usersArr = res;
+          total = res.length;
+        } else if (res?.users && Array.isArray(res.users)) {
+          usersArr = res.users;
+          total = typeof res.total === 'number' ? res.total : usersArr.length;
+        } else if (res?.data && Array.isArray(res.data?.users)) {
+          usersArr = res.data.users;
+          total = typeof res.data.total === 'number' ? res.data.total : usersArr.length;
+        } else if (res?.data && Array.isArray(res.data)) {
+          usersArr = res.data;
+          total = usersArr.length;
+        } else {
+          console.warn('getUsers: respuesta con formato inesperado', res);
+        }
+
+        this.users.set(usersArr);
+        this.totalUsers.set(total);
+      },
+      error: (err) => {
+        console.error('Error al cargar usuarios:', err);
+        this.users.set([]);
+        this.totalUsers.set(0);
       }
     });
   }

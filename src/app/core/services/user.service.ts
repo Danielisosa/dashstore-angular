@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap, catchError, throwError } from 'rxjs';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { Observable, tap, catchError, throwError, map } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { UserProfile, UpdateUserProfileDto, ChangePasswordDto } from '../models/user.model';
@@ -35,17 +35,39 @@ export class UserService {
   getUsers(limit = 10, offset = 0, search = ''): Observable<PaginatedUsersResponse> {
     this.loading.set(true);
     let params = new HttpParams()
-      .set('limit', limit)
-      .set('offset', offset);
+      .set('limit', String(limit))
+      .set('offset', String(offset))
+    
+      .set('_', String(Date.now()));
 
     if (search) {
       params = params.set('search', search);
     }
 
-    return this.http.get<PaginatedUsersResponse>(this.API_URL, { params }).pipe(
-      tap(() => this.loading.set(false)),
+    return this.http.get<PaginatedUsersResponse>(this.API_URL, { params, observe: 'response' }).pipe(
+      map((resp: HttpResponse<PaginatedUsersResponse>) => {
+        this.loading.set(false);
+        const contentType = resp.headers.get('content-type') || '';
+        if (contentType.indexOf('application/json') === -1) {
+
+          throw {
+            status: resp.status,
+            message: 'Unexpected content-type: ' + contentType,
+            body: resp.body
+          };
+        }
+
+      
+
+        if (!resp.body) {
+          throw { status: resp.status, message: 'Empty response body' };
+        }
+
+        return resp.body as PaginatedUsersResponse;
+      }),
       catchError((error) => {
         this.loading.set(false);
+        console.error('getUsers error:', error);
         return throwError(() => error);
       })
     );
@@ -124,7 +146,7 @@ export class UserService {
   /**
    * Envía la solicitud para actualizar la contraseña.
    * El backend puede exponer la ruta en /users/change-password o /auth/change-password,
-   * así que intentamos ambas para evitar un 404 por mismatch de endpoints.
+    
    */
   changePassword(dto: ChangePasswordDto): Observable<{ message: string }> {
     this.loading.set(true);
