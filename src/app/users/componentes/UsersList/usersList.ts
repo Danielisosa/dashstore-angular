@@ -44,7 +44,7 @@ export class UsersList {
     const search = this.searchControl.value || '';
     this.userService.getUsers(this.limit(), this.offset(), search).subscribe({
       next: (res: any) => {
-     
+
         let usersArr: any[] = [];
         let total = 0;
 

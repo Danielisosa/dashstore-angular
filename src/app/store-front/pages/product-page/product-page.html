@@ -33,7 +33,7 @@
 
       <div class="flex flex-col gap-6 mt-4">
         <div class="flex flex-col sm:flex-row gap-3">
-        
+
 
           <button
           [disabled]="productResource.isLoading()"
@@ -64,36 +64,3 @@
     </aside>
   </div>
 }
-<!--
- @if (productResource.isLoading()){
-  <div class="flex justify-center items-center h-screen">
-    <span class="loading loading-spinner loading-lg"></span>
-  </div>
-
-}
-
-@if (productResource.hasValue()) {
-  <div class="product-page">
-    <div>
-      <product-carousel [images]="productResource.value().images"/>
-    </div>
-
-    <aside class="product-info">
-      <h2 class="product-hero-title">{{ productResource.value().title }}</h2>
-      <div class="product-price">{{ productResource.value().price | currency:'USD':'symbol':'1.2-2' }}</div>
-      <div class="divider"></div>
-      <p class="product-description">{{ productResource.value().description }}</p>
-
-      <div class="product-actions">
-        <button class="ds-btn ds-btn--accent">Comprar</button>
-        <button class="ds-btn ds-btn--ghost">Agregar al carrito</button>
-      </div>
-
-      <div class="tag-list">
-        @for (tag of productResource.value().tags ; track tag) {
-          <span class="tag">{{ tag }}</span>
-        }
-      </div>
-    </aside>
-  </div>
-} -->

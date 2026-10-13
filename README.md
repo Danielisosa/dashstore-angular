@@ -39,6 +39,18 @@ ng serve
 
 Abre http://localhost:4200/ en tu navegador.
 
+### Chat con IA
+
+El chat usa una Netlify Function. Crea un archivo `.env` en la raíz del proyecto con una clave nueva de Gemini:
+
+```env
+GEMINI_API_KEY=tu_clave_de_gemini
+```
+
+Arranca el proyecto con `npm start` y abre http://localhost:8888/. No uses `ng serve` directamente para probar el chat, porque ese servidor no ejecuta Netlify Functions. El archivo `.env` está excluido de Git.
+
+En producción, configura `GEMINI_API_KEY` en las variables de entorno del sitio Netlify y vuelve a desplegarlo. Nunca guardes esta clave en `src/environments` ni en código del navegador.
+
 
 ## 🌐Despliegue
 El proyecto se encuentra desplegado y en vivo en el siguiente enlace:

@@ -51,19 +51,6 @@
         </svg>
         <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[10px] font-bold text-white shadow-sm">0</span>
       </button>
-      <!-- CÓDIGO MODIFICADO Y REACTIVO -->
-      <!-- <button aria-label="Ver carrito" class="btn btn-ghost btn-sm btn-circle relative text-slate-400 hover:text-accent hover:bg-slate-800/50">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4m0 0H4.5A2.25 2.25 0 0 0 2.25 12.75v5.625c0 1.036.84 1.875 1.875 1.875h15.75c1.036 0 1.875-.84 1.875-1.875V12.75A2.25 2.25 0 0 0 19.5 10.5h-3.75z" />
-        </svg>
-
-
-        @if (totalItems() > 0) {
-          <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-slate-950 shadow-sm animate-pulse">
-            {{ totalItems() }}
-          </span>
-        }
-      </button> -->
 
       <div class="dropdown dropdown-end">
 
@@ -152,10 +139,7 @@
 
         @if(authService.authStatus() === 'authenticated'){
             <a routerLink="/profile" class="hidden sm:inline text-xs font-bold ds-title-gradient max-w-[100px] truncate hover:bg-accent/10"> {{ authService.user()?.fullName }}</a>
-        
-          <!-- <span class="hidden sm:inline text-xs font-medium text-slate-400 max-w-[100px] truncate">
-            {{ authService.user()?.fullName }}
-          </span> -->
+
           <button class="btn btn-sm btn-outline btn-error rounded-xl px-3" (click)="authService.logout()">
             Salir
           </button>
